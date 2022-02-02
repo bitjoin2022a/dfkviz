@@ -184,6 +184,7 @@ def update_bar_graph(hero_id, target_level, chosen1, chosen2a, chosen2b):
 
 #### WEB APP ####
 app = dash.Dash(__name__)
+server = app.server
 
 app.layout = html.Div(children=[
     html.H1(children='Hero Level Up Helper'),
@@ -290,7 +291,4 @@ def update_bar_graph_wrapper(hero_id_str, target_level, ch1, ch2a, ch2b):
     # 'subClass': 'Thief', 'summons': 32, 
 
 if __name__ == "__main__":
-
-
-
     app.run_server(debug=True)

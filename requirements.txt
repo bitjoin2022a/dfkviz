@@ -6,3 +6,4 @@ dash-table==5.0.0
 plotly
 numpy
 aiohttp==3.7.4.post0
+gunicorn
