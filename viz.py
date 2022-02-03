@@ -107,12 +107,15 @@ def simulate_level_up(hero_info, target_level, chosen1, chosen2, rng=None):
                 elif rng.rand() * 10000 <= hero_info[k+'GrowthS']:
                     this_level_up_trail[k] += 1
             # user chosen attribute growth
-            this_level_up_trail[chosen1] += 1
+            if chosen1 in attrs:
+                this_level_up_trail[chosen1] += 1
             # user chosen attribute growth-2 
-            if rng.rand() < 0.5:
-                this_level_up_trail[chosen2[0]] += 1
-            if rng.rand() < 0.5:
-                this_level_up_trail[chosen2[1]] += 1
+            if chosen2[0] in attrs:
+                if rng.rand() < 0.5:
+                    this_level_up_trail[chosen2[0]] += 1
+            if chosen2[1] in attrs:
+                if rng.rand() < 0.5:
+                    this_level_up_trail[chosen2[1]] += 1
             # rarity draw ...
             if (l+1) % 5 == 0:
                 if hero_info['rarity'] == 1: #'uncommon':
@@ -232,7 +235,6 @@ app.layout = html.Div(children=[
         dcc.Dropdown(
             id='choice-A',
             options=[{'label': i, 'value': i} for i in key_pairs.keys()],
-            value='strength'
         ),
         ], style={'width': '30%', 'display': 'inline-block'}),
     html.Div([
@@ -240,7 +242,6 @@ app.layout = html.Div(children=[
         dcc.Dropdown(
             id='choice-B-1',
             options=[{'label': i, 'value': i} for i in key_pairs.keys()],
-            value='luck'
         ),
         ], style={'width': '30%', 'display': 'inline-block'}),
     html.Div([
@@ -248,7 +249,6 @@ app.layout = html.Div(children=[
         dcc.Dropdown(
             id='choice-B-2',
             options=[{'label': i, 'value': i} for i in key_pairs.keys()],
-            value='intelligence'
         ),
         ], style={'width': '30%', 'display': 'inline-block'}),
     html.Div(id="info-div", 
@@ -259,6 +259,31 @@ app.layout = html.Div(children=[
     dcc.Store(id='hero-cache')
     ],
     )
+
+# make Gaia's blessing exclusive
+@app.callback(Output('choice-A', 'options'), 
+    Input('choice-B-1', 'value'),
+    Input('choice-B-2', 'value'))
+def exc_A_B1(c1, c2):
+    options=[{'label': i, 'value': i, 'disabled': i==c1 or i==c2} 
+        for i in key_pairs.keys()]
+    return options
+
+@app.callback(Output('choice-B-1', 'options'), 
+    Input('choice-A', 'value'),
+    Input('choice-B-2', 'value'))
+def exc_A_B1(c1, c2):
+    options=[{'label': i, 'value': i, 'disabled': i==c1 or i==c2} 
+        for i in key_pairs.keys()]
+    return options
+
+@app.callback(Output('choice-B-2', 'options'), 
+    Input('choice-A', 'value'),
+    Input('choice-B-1', 'value'))
+def exc_A_B1(c1, c2):
+    options=[{'label': i, 'value': i, 'disabled': i==c1 or i==c2} 
+        for i in key_pairs.keys()]
+    return options
 
 @app.callback(
     Output('hero-cache', 'data'), 
