@@ -197,11 +197,16 @@ def update_bar_graph(hero_info, target_level, chosen1, chosen2a, chosen2b):
     z2 = np.array(z2)
     fig = go.Figure()
     fig.add_trace(
-        go.Bar(x=attributes, y=y, error_y=dict(
-            type='data',
-            symmetric=False,
-            array=z2-z1,
-            arrayminus=y-z1)))
+        go.Bar(x=attributes, y=y,
+            hovertemplate="",
+            text=[f"Max: {zz2},<br>Avg: {yy:.1f}<br>Min{zz1}" 
+                for zz2, yy, zz1 in zip(z2, y, z1)],
+            showlegend=False,
+            error_y=dict(
+                type='data',
+                symmetric=False,
+                array=z2-z1,
+                arrayminus=y-z1)))
     fig.update_layout(
         title=dict(
             text=f"Hero Attribute Stats at Target Level {target_level}",
@@ -211,7 +216,16 @@ def update_bar_graph(hero_info, target_level, chosen1, chosen2a, chosen2b):
     return fig
 
 #### WEB APP ####
-app = dash.Dash(__name__)
+external_stylesheets = [
+    'https://codepen.io/chriddyp/pen/bWLwgP.css',
+    {
+        'href': 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css',
+        'rel': 'stylesheet',
+        'integrity': 'sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO',
+        'crossorigin': 'anonymous'
+    }
+]
+app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server = app.server
 
 app.layout = html.Div(children=[
