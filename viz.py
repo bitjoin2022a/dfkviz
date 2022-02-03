@@ -46,14 +46,14 @@ g_dfk_graph_url = \
 
 #### STAT COMPUTATION ####
 def uncommon_plus_every_5(h, rng):
-    attrs = key_pairs.keys()
+    attrs = list(key_pairs.keys())
     aa = rng.choice(attrs, 2, replace=False)
     for a in aa:
         h[a] += 1
     return h
 
 def rare_plus_every_5(h, rng):
-    attrs = key_pairs.keys()
+    attrs = list(key_pairs.keys())
     aa = rng.choice(attrs, 3, replace=False)
     for a in aa:
         h[a] += 1
@@ -63,7 +63,7 @@ def rare_plus_every_5(h, rng):
     return h
 
 def legendary_plus_every_5(h, rng):
-    attrs = key_pairs.keys()
+    attrs = list(key_pairs.keys())
     aa = rng.choice(attrs, 4, replace=False)
     h[aa[0]] += 2
     
@@ -75,7 +75,7 @@ def legendary_plus_every_5(h, rng):
     return h
     
 def mythic_plus_every_5(h, rng):
-    attrs = key_pairs.keys()
+    attrs = list(key_pairs.keys())
     aa = rng.choice(attrs, 6, replace=False)
     for a in aa[:3]:
         h[a] += 2
@@ -114,18 +114,19 @@ def simulate_level_up(hero_info, target_level, chosen1, chosen2, rng=None):
             if rng.rand() < 0.5:
                 this_level_up_trail[chosen2[1]] += 1
             # rarity draw ...
-            if hero_info['rarity'] == 1: #'uncommon':
-                this_level_up_trail = \
-                    uncommon_plus_every_5(this_level_up_trail, rng)
-            if hero_info['rarity'] == 2: #'rare':
-                this_level_up_trail = \
-                    rare_plus_every_5(this_level_up_trail, rng)
-            if hero_info['rarity'] == 3: #'legendary':
-                this_level_up_trail = \
-                    legendary_plus_every_5(this_level_up_trail, rng)
-            if hero_info['rarity'] == 4: # 'mythic':
-                this_level_up_trail = \
-                    mythic_plus_every_5(this_level_up_trail, rng)
+            if (l+1) % 5 == 0:
+                if hero_info['rarity'] == 1: #'uncommon':
+                    this_level_up_trail = \
+                        uncommon_plus_every_5(this_level_up_trail, rng)
+                if hero_info['rarity'] == 2: #'rare':
+                    this_level_up_trail = \
+                        rare_plus_every_5(this_level_up_trail, rng)
+                if hero_info['rarity'] == 3: #'legendary':
+                    this_level_up_trail = \
+                        legendary_plus_every_5(this_level_up_trail, rng)
+                if hero_info['rarity'] == 4: # 'mythic':
+                    this_level_up_trail = \
+                        mythic_plus_every_5(this_level_up_trail, rng)
             l += 1
         # save this trail to sampling records
         for k in attrs:
